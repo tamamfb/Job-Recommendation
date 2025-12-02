@@ -1,0 +1,461 @@
+{
+  "Database Fundamentals": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Computer Architecture": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Distributed Computing Systems": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Cyber Security": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Networking": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Software Development": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Programming Skills": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Project Management": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Computer Forensics Fundamentals": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Technical Communication": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "AI ML": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Software Engineering": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Business Analysis": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Communication skills": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Data Science": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Troubleshooting skills": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Graphics Designing": {
+    "bins": [
+      -Infinity,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Openness": {
+    "bins": [
+      -Infinity,
+      0.663865887,
+      0.719295829,
+      0.756184573,
+      0.807296856,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Conscientousness": {
+    "bins": [
+      -Infinity,
+      0.319538906,
+      0.420297833,
+      0.470072343,
+      0.548035098,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Extraversion": {
+    "bins": [
+      -Infinity,
+      0.257234912,
+      0.346213735,
+      0.420396605,
+      0.550155621,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Agreeableness": {
+    "bins": [
+      -Infinity,
+      0.068776627,
+      0.100375911,
+      0.155946123,
+      0.218754803,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Emotional_Range": {
+    "bins": [
+      -Infinity,
+      0.528778501,
+      0.602204741,
+      0.63695904,
+      0.692900402,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Conversation": {
+    "bins": [
+      -Infinity,
+      0.049704078,
+      0.079275779,
+      0.103457448,
+      0.158906331,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Openness to Change": {
+    "bins": [
+      -Infinity,
+      0.336220882,
+      0.362245304,
+      0.398803944,
+      0.43949041,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Hedonism": {
+    "bins": [
+      -Infinity,
+      0.117693846,
+      0.142036407,
+      0.173155457,
+      0.205632767,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Self-enhancement": {
+    "bins": [
+      -Infinity,
+      0.272280117,
+      0.299242102,
+      0.323410492,
+      0.364234565,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "Self-transcendence": {
+    "bins": [
+      -Infinity,
+      0.196329985,
+      0.218095105,
+      0.248274138,
+      0.2769569438000007,
+      Infinity
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  }
+}
