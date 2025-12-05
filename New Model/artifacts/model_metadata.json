@@ -1,0 +1,76 @@
+{
+  "hard_skills": [
+    "Database Fundamentals",
+    "Computer Architecture",
+    "Distributed Computing Systems",
+    "Cyber Security",
+    "Networking",
+    "Software Development",
+    "Programming Skills",
+    "Project Management",
+    "Computer Forensics Fundamentals",
+    "AI ML",
+    "Software Engineering",
+    "Business Analysis",
+    "Data Science",
+    "Troubleshooting skills",
+    "Graphics Designing"
+  ],
+  "soft_skills": [
+    "Technical Communication",
+    "Communication skills",
+    "Openness",
+    "Conscientousness",
+    "Extraversion",
+    "Agreeableness",
+    "Emotional_Range",
+    "Conversation",
+    "Openness to Change",
+    "Hedonism",
+    "Self-enhancement",
+    "Self-transcendence"
+  ],
+  "ensemble_weights": {
+    "hard": 0.6,
+    "soft": 0.4
+  },
+  "metrics": {
+    "dt_hard": {
+      "accuracy": 0.9181669394435352,
+      "f1_weighted": 0.9132294578356542,
+      "f1_macro": 0.906885268727374
+    },
+    "dt_soft": {
+      "accuracy": 1.0,
+      "f1_weighted": 1.0,
+      "f1_macro": 1.0
+    },
+    "dt_ensemble": {
+      "accuracy": 0.9847244953627933,
+      "f1_weighted": 0.9847218266862319,
+      "f1_macro": 0.9836434311670161
+    },
+    "rf_hard": {
+      "accuracy": 0.9345335515548282,
+      "f1_weighted": 0.9345221143695652,
+      "f1_macro": 0.9299004192872118
+    },
+    "rf_soft": {
+      "accuracy": 1.0,
+      "f1_weighted": 1.0,
+      "f1_macro": 1.0
+    },
+    "rf_ensemble": {
+      "accuracy": 1.0,
+      "f1_weighted": 1.0,
+      "f1_macro": 1.0
+    }
+  },
+  "best_model": "DT - Soft Only",
+  "dataset_shape": [9162, 28],
+  "num_classes": 16,
+  "train_test_split": {
+    "test_size": 0.2,
+    "random_state": 42
+  }
+}
