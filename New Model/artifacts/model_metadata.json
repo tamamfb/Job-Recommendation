@@ -36,9 +36,9 @@
   },
   "metrics": {
     "dt_hard": {
-      "accuracy": 0.9181669394435352,
-      "f1_weighted": 0.9132294578356542,
-      "f1_macro": 0.906885268727374
+      "accuracy": 0.9270605397520059,
+      "f1_weighted": 0.9273545110237498,
+      "f1_macro": 0.9029457088667615
     },
     "dt_soft": {
       "accuracy": 1.0,
@@ -46,14 +46,14 @@
       "f1_macro": 1.0
     },
     "dt_ensemble": {
-      "accuracy": 0.9847244953627933,
-      "f1_weighted": 0.9847218266862319,
-      "f1_macro": 0.9836434311670161
+      "accuracy": 0.9744711889132021,
+      "f1_weighted": 0.9741656600023506,
+      "f1_macro": 0.96500427428711
     },
     "rf_hard": {
-      "accuracy": 0.9345335515548282,
-      "f1_weighted": 0.9345221143695652,
-      "f1_macro": 0.9299004192872118
+      "accuracy": 0.9598832968636032,
+      "f1_weighted": 0.9451544589971,
+      "f1_macro": 0.9208937198067633
     },
     "rf_soft": {
       "accuracy": 1.0,
@@ -66,8 +66,8 @@
       "f1_macro": 1.0
     }
   },
-  "best_model": "DT - Soft Only",
-  "dataset_shape": [9162, 28],
+  "best_model": "RF - Ensemble",
+  "dataset_shape": [6854, 28],
   "num_classes": 16,
   "train_test_split": {
     "test_size": 0.2,
