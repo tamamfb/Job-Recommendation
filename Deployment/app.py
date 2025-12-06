@@ -604,7 +604,63 @@ def predict_jobs(user_data: Dict[str, float], rf_lite_hard, rf_lite_soft,
     df_results = df_results.sort_values("Probability", ascending=False).reset_index(drop=True)
     df_results["Rank"] = range(1, len(df_results) + 1)
     
-    return df_results[["Rank", "Job Role", "Match Score"]]
+    # return df_results[["Rank", "Job Role", "Match Score"]]
+    return df_results
+
+# ==================== Explainability Function ====================
+def explain_match(user_data, top_job_role, rf_lite_hard, rf_lite_soft, 
+                 preprocess_hard, preprocess_soft, feature_columns, 
+                 hard_skill_cols, soft_skill_cols, weights):
+    """
+    Calculates which features contributed most to the top job prediction
+    by checking how much the probability drops if that skill is removed/lowered.
+    """
+    # 1. Get original probability for the top role
+    original_results = predict_jobs(
+        user_data, rf_lite_hard, rf_lite_soft,
+        preprocess_hard, preprocess_soft, feature_columns,
+        hard_skill_cols, soft_skill_cols, weights
+    )
+    # Find the row for the top job
+    original_prob = original_results[original_results['Job Role'] == top_job_role]['Probability'].values[0]
+    
+    importances = []
+    
+    # 2. Iterate through all features
+    for feature in feature_columns:
+        current_val = user_data.get(feature, 1)
+        
+        # Only check features that actually have a score > 1 (contributing features)
+        if current_val > 1:
+            # Create a copy of input and lower this specific skill
+            modified_data = user_data.copy()
+            # Lower the score by 2 points (or to 1) to simulate "lacking" this skill
+            modified_data[feature] = max(1, current_val - 2)
+            
+            # Predict again
+            new_results = predict_jobs(
+                modified_data, rf_lite_hard, rf_lite_soft,
+                preprocess_hard, preprocess_soft, feature_columns,
+                hard_skill_cols, soft_skill_cols, weights
+            )
+            
+            try:
+                new_prob = new_results[new_results['Job Role'] == top_job_role]['Probability'].values[0]
+                # Importance is how much the probability dropped
+                drop = original_prob - new_prob
+                if drop > 0:
+                    importances.append({
+                        'feature': feature,
+                        'drop': drop,
+                        'original_score': current_val
+                    })
+            except IndexError:
+                # If the job dropped out of the top list entirely (rare but possible)
+                continue
+                
+    # 3. Sort by biggest drop
+    importances.sort(key=lambda x: x['drop'], reverse=True)
+    return importances[:4]  # Return top 4 drivers
 
 # ==================== Main App ====================
 def main():
@@ -770,7 +826,7 @@ def main():
                 else:
                     st.error("❌ Mohon jawab semua pertanyaan!")
 
-    # ==================== RESULTS PAGE ====================
+# ==================== RESULTS PAGE ====================
     elif st.session_state.page == 'results':
         st.markdown(f'''
         <div class="results-header">
@@ -779,21 +835,21 @@ def main():
         </div>
         ''', unsafe_allow_html=True)
         
+        # Calculate Averages
         avg_score = np.mean(list(st.session_state.responses.values()))
         tech_score = np.mean([st.session_state.responses[k] for k in feature_columns[:17]])
         soft_score = np.mean([st.session_state.responses[k] for k in feature_columns[17:]])
         
+        # Metrics Row
         col1, col2, col3 = st.columns(3)
-        
         with col1:
             st.markdown(f'<div class="metric-card"><div class="metric-value">{avg_score:.1f}/5</div><div class="metric-label">Skor Rata-rata</div></div>', unsafe_allow_html=True)
-        
         with col2:
             st.markdown(f'<div class="metric-card"><div class="metric-value">{tech_score:.1f}/5</div><div class="metric-label">Technical Skills</div></div>', unsafe_allow_html=True)
-        
         with col3:
             st.markdown(f'<div class="metric-card"><div class="metric-value">{soft_score:.1f}/5</div><div class="metric-label">Soft Skills</div></div>', unsafe_allow_html=True)
         
+        # Run Prediction & Explanation
         with st.spinner("🔮 Menganalisis profil Anda..."):
             results_df = predict_jobs(
                 st.session_state.responses,
@@ -803,6 +859,18 @@ def main():
             )
         
         top_job = results_df.iloc[0]
+        top_role = top_job['Job Role']
+
+        # Calculate Explanations (Key Drivers)
+        key_drivers = explain_match(
+            st.session_state.responses,
+            top_role,
+            rf_lite_hard, rf_lite_soft,
+            preprocess_hard, preprocess_soft,
+            feature_columns, hard_skill_cols, soft_skill_cols, weights
+        )
+
+        # Show Top Job
         st.markdown(f'''
         <div class="top-job-card">
             <div class="top-job-label">🎯 Rekomendasi #1 untuk Anda</div>
@@ -810,7 +878,27 @@ def main():
             <div class="top-job-score">Match: {top_job['Match Score']}</div>
         </div>
         ''', unsafe_allow_html=True)
+
+        st.markdown("### 💡 Kenapa rekomendasi ini?")
+        if key_drivers:
+            st.info(f"Profil Anda sangat cocok dengan **{top_role}** karena keunggulan Anda di area berikut:")
+            
+            exp_cols = st.columns(len(key_drivers))
+            for i, driver in enumerate(key_drivers):
+                with exp_cols[i]:
+                    st.markdown(f"""
+                    <div style="background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⭐</div>
+                        <div style="font-weight: 700; color: #4f46e5; font-size: 0.85rem; margin-bottom: 0.3rem; line-height: 1.2;">{driver['feature']}</div>
+                        <div style="font-size: 0.8rem; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 12px; display: inline-block; margin: 0 auto;">Skor Anda: {driver['original_score']}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+        else:
+            st.info("Profil Anda memiliki keseimbangan skill yang unik untuk peran ini.")
         
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Leaderboard Section
         st.markdown("### 🏆 Semua Rekomendasi Karir")
         st.markdown('<div class="leaderboard-card">', unsafe_allow_html=True)
         
@@ -842,6 +930,7 @@ def main():
         st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown("<br>", unsafe_allow_html=True)
+        
         col1, col2, col3 = st.columns([1, 1, 1])
         
         with col1:
@@ -862,6 +951,5 @@ def main():
                 st.rerun()
         
         st.markdown('<div class="footer"><div>🚀 CareerMatch AI</div><div style="margin-top: 0.3rem;">Powered by Machine Learning • Built with Streamlit</div></div>', unsafe_allow_html=True)
-
 if __name__ == "__main__":
     main()
