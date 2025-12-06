@@ -42,9 +42,20 @@ def apply_custom_css():
         max-width: 1400px !important;
     }
     
-    /* Force all text to be dark */
-    .stApp, .stApp p, .stApp span, .stApp div, .stApp label {
+    /* Force all text to be dark - except special elements */
+    .stApp p, .stApp label {
         color: #1e293b !important;
+    }
+    
+    /* Ensure white text on dark backgrounds */
+    .leaderboard-header,
+    .top-job-card,
+    .top-job-card *,
+    .results-header,
+    .results-header *,
+    .assessment-header,
+    .assessment-header * {
+        color: white !important;
     }
     
     /* Landing Page Styles */
@@ -800,7 +811,8 @@ def main():
         </div>
         ''', unsafe_allow_html=True)
         
-        st.markdown('<div class="leaderboard-card"><div class="leaderboard-header">🏆 Semua Rekomendasi Karir</div>', unsafe_allow_html=True)
+        st.markdown("### 🏆 Semua Rekomendasi Karir")
+        st.markdown('<div class="leaderboard-card">', unsafe_allow_html=True)
         
         for _, row in results_df.iterrows():
             rank = row['Rank']
