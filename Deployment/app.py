@@ -470,8 +470,8 @@ def load_lottie_file(filepath: str):
 
 # ==================== RuleFitLite Class ====================
 class RuleFitLite:
-    def __init__(self, n_estimators=200, max_depth=5, min_samples_leaf=1,
-                 random_state=42, alpha=1.0):
+    def __init__(self, n_estimators=100, max_depth=3, min_samples_leaf=10,
+                 random_state=42, alpha=10.0):
         self.rf = RandomForestClassifier(
             n_estimators=n_estimators,
             max_depth=max_depth,
@@ -484,8 +484,9 @@ class RuleFitLite:
             penalty="l1",
             solver="saga",
             C=1.0/max(self.alpha, 1e-8),
-            max_iter=3000,
-            multi_class="auto",
+            max_iter=1000,
+            tol=1e-3,
+            random_state=random_state
         )
         self.classes_ = None
 
@@ -517,6 +518,7 @@ class RuleFitLite:
         probs = self.predict_proba(X)
         idx = probs.argmax(axis=1)
         return np.array([self.lr.classes_[i] for i in idx])
+
 
 # ==================== Question Mapping ====================
 QUESTION_MAP = {
