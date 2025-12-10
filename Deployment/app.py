@@ -528,14 +528,14 @@ QUESTION_MAP = {
     "Programming Skills": "Seberapa mahir Anda dalam pemrograman?",
     "Project Management": "Seberapa terampil Anda dalam mengelola proyek?",
     "Computer Forensics Fundamentals": "Seberapa paham Anda tentang forensik komputer?",
-    "Technical Communication": "Seberapa baik Anda dalam berkomunikasi secara teknis?",
     "AI ML": "Seberapa mahir Anda dalam AI dan Machine Learning?",
     "Software Engineering": "Seberapa kuat pemahaman Anda tentang rekayasa perangkat lunak?",
     "Business Analysis": "Seberapa terampil Anda dalam menganalisis bisnis?",
-    "Communication skills": "Seberapa baik kemampuan komunikasi Anda?",
     "Data Science": "Seberapa mahir Anda dalam ilmu data?",
     "Troubleshooting skills": "Seberapa cepat Anda dalam memecahkan masalah teknis?",
     "Graphics Designing": "Seberapa kreatif Anda dalam desain grafis?",
+    "Technical Communication": "Seberapa baik Anda dalam berkomunikasi secara teknis?",
+    "Communication skills": "Seberapa baik kemampuan komunikasi Anda?",
     "Openness": "Seberapa terbuka Anda terhadap pengalaman dan ide baru?",
     "Conscientousness": "Seberapa teliti dan terorganisir Anda dalam bekerja?",
     "Extraversion": "Seberapa aktif Anda dalam berinteraksi sosial?",
@@ -695,12 +695,12 @@ def main():
             </div>
             ''', unsafe_allow_html=True)
 
-            st.markdown('<span class="input-label">📧 Masukkan Email Anda untuk Memulai</span>', unsafe_allow_html=True)
+            st.markdown('<span class="input-label">Masukkan Email Anda untuk Memulai</span>', unsafe_allow_html=True)
             email = st.text_input("Email", placeholder="nama@email.com", key="email_input", label_visibility="collapsed")
 
             st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
 
-            if st.button("🚀 Mulai Assessment", use_container_width=True):
+            if st.button("Mulai Assessment", use_container_width=True):
                 if email and "@" in email:
                     st.session_state.email = email
                     st.session_state.responses = {}
@@ -765,9 +765,9 @@ def main():
             responses = {}
             
             # Technical Skills Section
-            st.markdown("### 💻 Technical Skills")
+            st.markdown("### 💻 Hard Skills")
             
-            for i, feature in enumerate(feature_columns[:17]):
+            for i, feature in enumerate(feature_columns[:15]):
                 question = QUESTION_MAP.get(feature, f"Rate your {feature}")
                 prev_val = st.session_state.responses.get(feature, None)
                 
@@ -786,9 +786,9 @@ def main():
             st.markdown("---")
             
             # Soft Skills Section
-            st.markdown("### 🧠 Personality & Soft Skills")
+            st.markdown("### 🧠 Soft Skills")
             
-            for i, feature in enumerate(feature_columns[17:]):
+            for i, feature in enumerate(feature_columns[15:]):
                 question = QUESTION_MAP.get(feature, f"Rate your {feature}")
                 prev_val = st.session_state.responses.get(feature, None)
                 
@@ -809,10 +809,10 @@ def main():
             col1, col2, col3 = st.columns([1, 2, 1])
             
             with col1:
-                back = st.form_submit_button("⬅️ Kembali", use_container_width=True)
+                back = st.form_submit_button("Kembali", use_container_width=True)
             
             with col3:
-                submit = st.form_submit_button("🎯 Lihat Hasil", use_container_width=True)
+                submit = st.form_submit_button("Lihat Hasil", use_container_width=True)
             
             if back:
                 st.session_state.page = 'landing'
@@ -830,15 +830,15 @@ def main():
     elif st.session_state.page == 'results':
         st.markdown(f'''
         <div class="results-header">
-            <div class="results-title">🎉 Hasil Rekomendasi Karir</div>
+            <div class="results-title">Hasil Rekomendasi Karir</div>
             <div style="opacity: 0.9; margin-top: 0.3rem; font-size: 0.95rem;">untuk {st.session_state.email}</div>
         </div>
         ''', unsafe_allow_html=True)
         
         # Calculate Averages
         avg_score = np.mean(list(st.session_state.responses.values()))
-        tech_score = np.mean([st.session_state.responses[k] for k in feature_columns[:17]])
-        soft_score = np.mean([st.session_state.responses[k] for k in feature_columns[17:]])
+        tech_score = np.mean([st.session_state.responses[k] for k in feature_columns[:15]])
+        soft_score = np.mean([st.session_state.responses[k] for k in feature_columns[15:]])
         
         # Metrics Row
         col1, col2, col3 = st.columns(3)
@@ -850,7 +850,7 @@ def main():
             st.markdown(f'<div class="metric-card"><div class="metric-value">{soft_score:.1f}/5</div><div class="metric-label">Soft Skills</div></div>', unsafe_allow_html=True)
         
         # Run Prediction & Explanation
-        with st.spinner("🔮 Menganalisis profil Anda..."):
+        with st.spinner("Menganalisis profil Anda..."):
             results_df = predict_jobs(
                 st.session_state.responses,
                 rf_lite_hard, rf_lite_soft,
@@ -873,7 +873,7 @@ def main():
         # Show Top Job
         st.markdown(f'''
         <div class="top-job-card">
-            <div class="top-job-label">🎯 Rekomendasi #1 untuk Anda</div>
+            <div class="top-job-label">Rekomendasi #1 untuk Anda</div>
             <div class="top-job-name">{top_job['Job Role']}</div>
             <div class="top-job-score">Match: {top_job['Match Score']}</div>
         </div>
@@ -934,22 +934,22 @@ def main():
         col1, col2, col3 = st.columns([1, 1, 1])
         
         with col1:
-            if st.button("🔄 Isi Ulang", use_container_width=True):
+            if st.button("Isi Ulang", use_container_width=True):
                 st.session_state.responses = {}
                 st.session_state.page = 'assessment'
                 st.rerun()
         
         with col2:
             csv = results_df.to_csv(index=False)
-            st.download_button("📥 Download CSV", csv, f"career_{st.session_state.email.split('@')[0]}.csv", "text/csv", use_container_width=True)
+            st.download_button("Download CSV", csv, f"career_{st.session_state.email.split('@')[0]}.csv", "text/csv", use_container_width=True)
         
         with col3:
-            if st.button("🏠 Beranda", use_container_width=True):
+            if st.button("Beranda", use_container_width=True):
                 st.session_state.page = 'landing'
                 st.session_state.responses = {}
                 st.session_state.email = ''
                 st.rerun()
         
-        st.markdown('<div class="footer"><div>🚀 CareerMatch AI</div><div style="margin-top: 0.3rem;">Powered by Machine Learning • Built with Streamlit</div></div>', unsafe_allow_html=True)
+        st.markdown('<div class="footer"><div>CareerMatch AI</div><div style="margin-top: 0.3rem;">Powered by Machine Learning • Built with Streamlit</div></div>', unsafe_allow_html=True)
 if __name__ == "__main__":
     main()
