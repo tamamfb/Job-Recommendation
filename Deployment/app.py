@@ -614,33 +614,23 @@ def predict_jobs(user_data: Dict[str, float], rf_lite_hard, rf_lite_soft,
 def explain_match(user_data, top_job_role, rf_lite_hard, rf_lite_soft, 
                  preprocess_hard, preprocess_soft, feature_columns, 
                  hard_skill_cols, soft_skill_cols, weights):
-    """
-    Calculates which features contributed most to the top job prediction
-    by checking how much the probability drops if that skill is removed/lowered.
-    """
-    # 1. Get original probability for the top role
+
     original_results = predict_jobs(
         user_data, rf_lite_hard, rf_lite_soft,
         preprocess_hard, preprocess_soft, feature_columns,
         hard_skill_cols, soft_skill_cols, weights
     )
-    # Find the row for the top job
     original_prob = original_results[original_results['Job Role'] == top_job_role]['Probability'].values[0]
     
     importances = []
     
-    # 2. Iterate through all features
     for feature in feature_columns:
         current_val = user_data.get(feature, 1)
         
-        # Only check features that actually have a score > 1 (contributing features)
         if current_val > 1:
-            # Create a copy of input and lower this specific skill
             modified_data = user_data.copy()
-            # Lower the score by 2 points (or to 1) to simulate "lacking" this skill
             modified_data[feature] = max(1, current_val - 2)
             
-            # Predict again
             new_results = predict_jobs(
                 modified_data, rf_lite_hard, rf_lite_soft,
                 preprocess_hard, preprocess_soft, feature_columns,
@@ -649,7 +639,6 @@ def explain_match(user_data, top_job_role, rf_lite_hard, rf_lite_soft,
             
             try:
                 new_prob = new_results[new_results['Job Role'] == top_job_role]['Probability'].values[0]
-                # Importance is how much the probability dropped
                 drop = original_prob - new_prob
                 if drop > 0:
                     importances.append({
@@ -658,12 +647,10 @@ def explain_match(user_data, top_job_role, rf_lite_hard, rf_lite_soft,
                         'original_score': current_val
                     })
             except IndexError:
-                # If the job dropped out of the top list entirely (rare but possible)
                 continue
                 
-    # 3. Sort by biggest drop
     importances.sort(key=lambda x: x['drop'], reverse=True)
-    return importances[:4]  # Return top 4 drivers
+    return importances[:4]  
 
 # ==================== Main App ====================
 def main():
