@@ -728,12 +728,20 @@ def main():
 
     # ==================== ASSESSMENT PAGE ====================
     elif st.session_state.page == 'assessment':
+        def update_response(feature_name):
+            widget_key = f"radio_{feature_name}"
+            if widget_key in st.session_state:
+                st.session_state.responses[feature_name] = st.session_state[widget_key]
+        
         st.markdown(f'''
         <div class="assessment-header">
             <div class="assessment-title">📝 Skill Assessment</div>
             <div class="assessment-subtitle">Halo {st.session_state.email}! Jawab semua pertanyaan di bawah.</div>
         </div>
         ''', unsafe_allow_html=True)
+        
+        if not st.session_state.responses:
+            st.session_state.responses = {feature: None for feature in feature_columns}
         
         answered = sum(1 for v in st.session_state.responses.values() if v is not None)
         total = len(feature_columns)
@@ -764,66 +772,60 @@ def main():
         </div>
         ''', unsafe_allow_html=True)
         
-        with st.form("assessment_form"):
-            responses = {}
+        # Technical Skills Section
+        st.markdown("### 💻 Hard Skills")
+        
+        for i, feature in enumerate(feature_columns[:15]):
+            question = QUESTION_MAP.get(feature, f"Rate your {feature}")
+            prev_val = st.session_state.responses.get(feature, None)
             
-            # Technical Skills Section
-            st.markdown("### 💻 Hard Skills")
+            st.markdown(f"**{i+1}. {question}**")
             
-            for i, feature in enumerate(feature_columns[:15]):
-                question = QUESTION_MAP.get(feature, f"Rate your {feature}")
-                prev_val = st.session_state.responses.get(feature, None)
-                
-                st.markdown(f"**{i+1}. {question}**")
-                
-                selected = st.radio(
-                    f"q_{feature}",
-                    options=[1, 2, 3, 4, 5],
-                    index=prev_val - 1 if prev_val else None,
-                    horizontal=True,
-                    key=f"radio_{feature}",
-                    label_visibility="collapsed"
-                )
-                responses[feature] = selected
+            st.radio(
+                f"q_{feature}",
+                options=[1, 2, 3, 4, 5],
+                index=prev_val - 1 if prev_val is not None else None,
+                horizontal=True,
+                key=f"radio_{feature}",
+                label_visibility="collapsed",
+                on_change=update_response,
+                args=(feature,)
+            )
+        
+        st.markdown("---")
+        
+        # Soft Skills Section
+        st.markdown("### 🧠 Soft Skills")
+        
+        for i, feature in enumerate(feature_columns[15:]):
+            question = QUESTION_MAP.get(feature, f"Rate your {feature}")
+            prev_val = st.session_state.responses.get(feature, None)
             
-            st.markdown("---")
+            st.markdown(f"**{i+16}. {question}**")
             
-            # Soft Skills Section
-            st.markdown("### 🧠 Soft Skills")
-            
-            for i, feature in enumerate(feature_columns[15:]):
-                question = QUESTION_MAP.get(feature, f"Rate your {feature}")
-                prev_val = st.session_state.responses.get(feature, None)
-                
-                st.markdown(f"**{i+18}. {question}**")
-                
-                selected = st.radio(
-                    f"q_{feature}",
-                    options=[1, 2, 3, 4, 5],
-                    index=prev_val - 1 if prev_val else None,
-                    horizontal=True,
-                    key=f"radio_{feature}",
-                    label_visibility="collapsed"
-                )
-                responses[feature] = selected
-            
-            st.markdown("---")
-            
-            col1, col2, col3 = st.columns([1, 2, 1])
-            
-            with col1:
-                back = st.form_submit_button("Kembali", use_container_width=True)
-            
-            with col3:
-                submit = st.form_submit_button("Lihat Hasil", use_container_width=True)
-            
-            if back:
+            st.radio(
+                f"q_{feature}",
+                options=[1, 2, 3, 4, 5],
+                index=prev_val - 1 if prev_val is not None else None,
+                horizontal=True,
+                key=f"radio_{feature}",
+                label_visibility="collapsed",
+                on_change=update_response,
+                args=(feature,)
+            )
+        
+        st.markdown("---")
+        
+        col1, col2, col3 = st.columns([1, 2, 1])
+        
+        with col1:
+            if st.button("Kembali", use_container_width=True):
                 st.session_state.page = 'landing'
                 st.rerun()
-            
-            if submit:
-                if all(v is not None for v in responses.values()):
-                    st.session_state.responses = responses
+        
+        with col3:
+            if st.button("Lihat Hasil", use_container_width=True):
+                if all(v is not None for v in st.session_state.responses.values()):
                     st.session_state.page = 'results'
                     st.rerun()
                 else:
@@ -958,7 +960,7 @@ def main():
             st.download_button("Download CSV", csv, f"career_{st.session_state.email.split('@')[0]}.csv", "text/csv", use_container_width=True)
         
         with col3:
-            if st.button("📧 Kirim ke Email", use_container_width=True):
+            if st.button("Kirim ke Email", use_container_width=True):
                 with st.spinner("Mengirim email..."):
                     success, message = email_sender.send_recommendation_email(
                         recipient_email=st.session_state.email,
