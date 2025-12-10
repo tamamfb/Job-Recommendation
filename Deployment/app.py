@@ -9,6 +9,7 @@ import scipy.sparse as sp
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from streamlit_lottie import st_lottie
+import email_sender
 
 # ==================== Page Config ====================
 st.set_page_config(
@@ -676,6 +677,8 @@ def main():
         st.session_state.email = ''
     if 'responses' not in st.session_state:
         st.session_state.responses = {}
+    if 'email_sent' not in st.session_state:
+        st.session_state.email_sent = False
 
     # ==================== LANDING PAGE ====================
     if st.session_state.page == 'landing':
@@ -931,12 +934,23 @@ def main():
         
         st.markdown("<br>", unsafe_allow_html=True)
         
-        col1, col2, col3 = st.columns([1, 1, 1])
+        # Email sending status message
+        if 'email_status' in st.session_state and st.session_state.email_status:
+            if st.session_state.email_success:
+                st.success(st.session_state.email_status)
+            else:
+                st.error(st.session_state.email_status)
+            # Clear status after displaying
+            del st.session_state.email_status
+            del st.session_state.email_success
+        
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
         
         with col1:
             if st.button("Isi Ulang", use_container_width=True):
                 st.session_state.responses = {}
                 st.session_state.page = 'assessment'
+                st.session_state.email_sent = False
                 st.rerun()
         
         with col2:
@@ -944,10 +958,28 @@ def main():
             st.download_button("Download CSV", csv, f"career_{st.session_state.email.split('@')[0]}.csv", "text/csv", use_container_width=True)
         
         with col3:
+            if st.button("📧 Kirim ke Email", use_container_width=True):
+                with st.spinner("Mengirim email..."):
+                    success, message = email_sender.send_recommendation_email(
+                        recipient_email=st.session_state.email,
+                        top_job=top_job.to_dict(),
+                        results_df=results_df,
+                        avg_score=avg_score,
+                        tech_score=tech_score,
+                        soft_score=soft_score,
+                        key_drivers=key_drivers
+                    )
+                    st.session_state.email_status = message
+                    st.session_state.email_success = success
+                    st.session_state.email_sent = success
+                    st.rerun()
+        
+        with col4:
             if st.button("Beranda", use_container_width=True):
                 st.session_state.page = 'landing'
                 st.session_state.responses = {}
                 st.session_state.email = ''
+                st.session_state.email_sent = False
                 st.rerun()
         
         st.markdown('<div class="footer"><div>CareerMatch AI</div><div style="margin-top: 0.3rem;">Powered by Machine Learning • Built with Streamlit</div></div>', unsafe_allow_html=True)
