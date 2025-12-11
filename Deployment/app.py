@@ -132,9 +132,15 @@ def apply_custom_css():
     .progress-wrapper {
         background: white;
         padding: 0.75rem 1rem;
-        border-radius: 10px;
+        border-radius: 0;
         margin-bottom: 1rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        width: 100%;
     }
     
     .progress-header {
@@ -746,6 +752,7 @@ def main():
                 <div class="progress-fill" style="width: {progress}%;"></div>
             </div>
         </div>
+        <div style="height: 80px;"></div>
         ''', unsafe_allow_html=True)
         
         st.markdown('''
