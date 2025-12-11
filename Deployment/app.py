@@ -131,9 +131,9 @@ def apply_custom_css():
     /* Progress bar */
     .progress-wrapper {
         background: white;
-        padding: 0.75rem 1rem;
+        padding: 0.5rem 1rem;
         border-radius: 0;
-        margin-bottom: 1rem;
+        margin-bottom: 0;
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         position: fixed;
         top: 0;
@@ -752,7 +752,6 @@ def main():
                 <div class="progress-fill" style="width: {progress}%;"></div>
             </div>
         </div>
-        <div style="height: 80px;"></div>
         ''', unsafe_allow_html=True)
         
         st.markdown('''
